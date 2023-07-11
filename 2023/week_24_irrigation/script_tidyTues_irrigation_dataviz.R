@@ -2,7 +2,6 @@
 
 library(tidyverse) # includes ggplot lib
 library(paletteer)
-devtools::install_github("kaizadp/soilpalettes")
 
 interviews_plotting <- read_csv("data_output/interviews_plotting.csv")
 
@@ -27,9 +26,11 @@ interviews_plot +
 
 interviews_plot +
   geom_jitter(alpha = 0.5, # adjust transparency
-              color = "red",
+              #color = "red",
               width = 0.2, # adjust horizontal jitter
-              height = 0.2,) # adjust vertical jitter 
+              height = 0.2,) + # adjust vertical jitter 
+  scale_color_paletteer_d("nord::frost")
+
 
 # change the color of the points based on the village
 interviews_plotting %>% 
@@ -126,8 +127,9 @@ percent_wall_type <- interviews_plotting %>%
   
 percent_wall_type %>% 
   ggplot(aes(x = village, y = percent, fill = respondent_wall_type)) +
-  geom_bar(stat = "identity", position = "dodge")  + 
-  scale_color_gradientn(colors = rev(soil_palette("redox2",5))) 
+  geom_bar(stat = "identity", position = "dodge") +
+  scale_fill_viridis(discrete = TRUE)
+  #scale_color_gradientn(colors = rev(soil_palette("redox2",5))) 
 
 
 
@@ -146,10 +148,15 @@ percent_memb_assoc <- interviews_plotting %>%
 percent_memb_assoc %>% 
   ggplot(aes(x = village, y = percent_mem_assoc, fill = memb_assoc)) +
   geom_bar(stat = "identity", position = "dodge") +
-  labs(title = "Proportion of households in an irrigation associationj",
-       fill = "Type of Wall in Home",
+  labs(title = "Proportion of households in each village that are in an irrigation association",
+       fill = "Irrigation Association Member?",
        x = "Village",
-       y = "Percent")
+       y = "Proportion of members in irrigation association") +
+  theme(axis.text.x = element_text(colour = "grey20", size = 12, angle = 45,
+                                   hjust = 0.5, vjust = 0.5),
+        axis.text.y = element_text(colour = "grey20", size = 12),
+        text = element_text(size = 12)) +
+  scale_fill_viridis(discrete = TRUE)
 
 percent_wall_type %>%
   ggplot(aes(x = village, y = percent, fill = respondent_wall_type)) +
@@ -175,8 +182,9 @@ percent_wall_type %>%
 # Create a dataframe with new column
 percent_items <- interviews_plotting %>%
   group_by(village) %>%
-  summarize(across(bicycle:car, ~ sum(.x) / n() * 100)) %>%
-  pivot_longer(bicycle:car, names_to = "items", values_to = "percent")
+  select(!c(no_listed_items,car)) %>% 
+  summarize(across(bicycle:computer, ~ sum(.x) / n() * 100)) %>%
+  pivot_longer(bicycle:computer, names_to = "items", values_to = "percent")
 
 percent_items %>%
   ggplot(aes(x = village, y = percent)) +
@@ -194,7 +202,7 @@ percent_items %>%
 
 # save the plot
 my_plot <- percent_items %>%
-  ggplot(aes(x = village, y = percent)) +
+  ggplot(aes(x = village, y = percent, fill = village)) +
   geom_bar(stat = "identity", position = "dodge") +
   facet_wrap(~ items) +
   labs(title = "Percent of respondents in each village \n who owned each item",
@@ -205,11 +213,16 @@ my_plot <- percent_items %>%
         axis.text.y = element_text(color = "grey20", size = 12),
         text = element_text(size = 16),
         plot.title = element_text(hjust = 0.5)) + 
-  scale_color_paletteer_d("nord::aurora")
+  scale_fill_brewer(type = "qual", palette = "Accent")
 
 my_plot
 
 ggsave("fig_output/items_owned.png", my_plot, width = 15, height = 10)
+
+
+
+
+
 
 library(ggplot2)
 
