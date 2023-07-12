@@ -204,7 +204,7 @@ percent_items %>%
 my_plot <- percent_items %>%
   ggplot(aes(x = village, y = percent, fill = village)) +
   geom_bar(stat = "identity", position = "dodge") +
-  geom_text(aes(label = paste(format(percent, digits = 1), "%")), size = 3, color = "grey20", vjust = -0.15) +
+  geom_text(aes(label = paste(format(percent, digits = 1), "%")), size = 3.5, color = "grey20", fontface = "bold", vjust = -0.15) +
   facet_wrap(~ items) +
   labs(title = "Percent of respondents in each village \n who owned each item",
       subtitle = "Data from SAFI (Studying African Farmer-Led Irrigation) Surveys in Tanzania and Mozambique.",
@@ -212,16 +212,18 @@ my_plot <- percent_items %>%
        y = "Percent of Respondents", 
       caption = "The survey data was collected through interviews conducted between November 2016 and June 2017") +
   theme(axis.text.x = element_blank(),
+        strip.text.x = element_text(size=12, face="italic"),
         axis.text.y = element_text(color = "grey20", size = 8),
         axis.title.x = element_blank(),
         axis.title.y = element_text(face = "bold", size = 14),
         plot.title = element_text(size = 16, hjust = 0.5),
-        plot.subtitle = element_text(size = 12),
-        plot.caption = element_text(hjust = 0.5)) + 
+        plot.subtitle = element_text(size = 12, face = "italic"),
+        plot.caption = element_text(hjust = 0.5, size = 12)) + 
   scale_y_continuous(limits = c(0,85)) +
   scale_fill_brewer(type = "qual", palette = "Accent")
 
 my_plot
+
 
 ggsave("fig_output/items_owned.png", my_plot, width = 15, height = 10)
 
