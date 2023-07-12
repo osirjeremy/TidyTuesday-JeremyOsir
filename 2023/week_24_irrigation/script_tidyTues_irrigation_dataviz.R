@@ -204,15 +204,21 @@ percent_items %>%
 my_plot <- percent_items %>%
   ggplot(aes(x = village, y = percent, fill = village)) +
   geom_bar(stat = "identity", position = "dodge") +
+  geom_text(aes(label = paste(format(percent, digits = 1), "%")), size = 3, color = "grey20", vjust = -0.15) +
   facet_wrap(~ items) +
   labs(title = "Percent of respondents in each village \n who owned each item",
+      subtitle = "Data from SAFI (Studying African Farmer-Led Irrigation) Surveys in Tanzania and Mozambique.",
        x = "Village",
-       y = "Percent of Respondents") +
-  theme(axis.text.x = element_text(color = "grey20", size = 12, angle = 45,
-                                   hjust = 0.5, vjust = 0.5),
-        axis.text.y = element_text(color = "grey20", size = 12),
-        text = element_text(size = 16),
-        plot.title = element_text(hjust = 0.5)) + 
+       y = "Percent of Respondents", 
+      caption = "The survey data was collected through interviews conducted between November 2016 and June 2017") +
+  theme(axis.text.x = element_blank(),
+        axis.text.y = element_text(color = "grey20", size = 8),
+        axis.title.x = element_blank(),
+        axis.title.y = element_text(face = "bold", size = 14),
+        plot.title = element_text(size = 16, hjust = 0.5),
+        plot.subtitle = element_text(size = 12),
+        plot.caption = element_text(hjust = 0.5)) + 
+  scale_y_continuous(limits = c(0,85)) +
   scale_fill_brewer(type = "qual", palette = "Accent")
 
 my_plot
