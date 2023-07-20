@@ -1,6 +1,6 @@
 # Tidy Tuesday data visualizations - by Jeremy Osir
 
-Below are my Tidy Tuesday plots for 2023:
+Below are my Tidy Tuesday plots for 2023 that I coded in R:
 
 [Week 24: SAFI Irrigation Surveys
 ](2023/week_24_irrigation)
