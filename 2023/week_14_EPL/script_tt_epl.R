@@ -58,17 +58,22 @@ view(strict_refs)
 strict_refs_min10 <- strict_refs %>% 
   filter(total_games_reffed >= 10) %>% 
   mutate(home_yellows_per_game = total_home_yellows/total_games_reffed,
-         home_reds_per_game = total_home_reds/total_games_reffed,
          away_yellows_per_game = total_away_yellows/total_games_reffed,
+         yellows_per_game = (total_home_yellows +total_away_yellows)/total_games_reffed,
+         home_reds_per_game = total_home_reds/total_games_reffed,
          away_reds_per_game = total_away_reds/total_games_reffed,
+         reds_per_game = (total_home_reds +total_away_reds)/total_games_reffed,
          total_cards_per_game = total_cards/total_games_reffed)
 view(strict_refs_min10)
 
+# Create a subset of df for plots
+strict_refs_plotting <- strict_refs_min10 %>% 
+  select(c(Referee,home_yellows_per_game:total_cards_per_game))
 
 #### DATAVIZ ####
  # Barplot
 
-# average number of cards that referee gives in a game
+# average number of cards that each referee gave
 strict_refs_min10 %>% 
   arrange(desc(total_cards_per_game)) %>% 
   ggplot(aes(x = reorder(Referee, +total_cards_per_game), y = total_cards_per_game)) + # reorder arranges bar in desc order
@@ -76,10 +81,41 @@ strict_refs_min10 %>%
   coord_flip() 
 
 # average number of yellows and reds given in a game
-
   # first reshape df from wide to long
-strict_refs_long <- strict_refs_min10 %>% 
-  pivot_longer(!Referee, names_to = "card_metric", values_to = "count")
+strict_refs_long <- strict_refs_plotting %>%
+  select(c(Referee, home_yellows_per_game, away_yellows_per_game)) %>% 
+  pivot_longer(!Referee, names_to = "card_metric", values_to = "count") 
 
 
-  ggplot(aes)
+ref_yellow_plot <- strict_refs_long %>%
+  ggplot(aes(x = reorder(Referee, +count), y = count, fill = card_metric)) + 
+  geom_bar(stat = "identity", position = "dodge", width = 0.7) +
+  geom_text(aes(label = format(count, digits = 2)), 
+            position = position_dodge(width = 0.7), hjust = 1, 
+            size = 3, color = "black") +
+  coord_flip() +
+  labs(title = "Average number of yellow cards that each Premier League referees showed to home and away teams",
+       subtitle = "2021/2022 English Premier League Season",
+       x = "Referee",
+       y = "Number of yellow cards given per game", 
+       caption = "Minimum number of games refereed =  10 games") +
+  #  geom_hline(yintercept = mean(strict_refs_plotting$home_yellows_per_game),) +
+  theme(plot.title = element_text(size = 12, hjust = 0.5, face = "bold"),
+        plot.subtitle = element_text(size = 11, face = "italic", hjust = 0.5),
+        plot.caption = element_text(hjust = 0.5, size = 9),
+        panel.background = element_rect(fill = NA),
+        #panel.grid.major = element_blank(),
+        axis.title.x = element_text(color = "grey20",face = "bold", size = 11),
+        axis.title.y = element_text(face = "bold", size = 11),
+        axis.text.y = element_text(color = "grey20", face = "bold", size = 9),
+        axis.text.x = element_text(face = "bold", size = 8),
+        legend.position = "bottom") + 
+  labs(fill = "") +
+  scale_y_continuous(limits = c(0,2.5)) +
+  scale_fill_manual(labels = c("Away team", "Home Team"),values = c("#FFD700", "#FF8C00"))
+
+ref_yellow_plot
+
+
+ggsave("fig_output/yellows_home_away.png", ref_yellow_plot, width = 15, height = 10)
+
