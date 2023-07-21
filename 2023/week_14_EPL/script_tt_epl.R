@@ -3,7 +3,7 @@
 # Premier League match data from the 2021-2022 season = 380 games
 
 # Read in with tidytuesdayR package 
-install.packages("tidytuesdayR")
+# install.packages("tidytuesdayR")
 # This loads the readme and all the datasets for the week of interest
 
 # Either ISO-8601 date or year/week works!
@@ -45,15 +45,10 @@ strict_refs <- soccer %>%
             total_games_reffed = n()) %>% 
   arrange(., desc(total_cards))
 
-view(strict_refs)  
 
-# Control for number of games since some refs oversee more games, set minimum number of 
-# games
-
-view(strict_refs)
-
-# Include only refs who have officiated 10+ games
-# calculate new column that captures cards given on a per game basis
+# Control for number of games since some refs oversee more games
+  # Include only refs who have officiated 10+ games
+  # calculate new column that captures cards given on a per game basis
 
 strict_refs_min10 <- strict_refs %>% 
   filter(total_games_reffed >= 10) %>% 
@@ -66,7 +61,7 @@ strict_refs_min10 <- strict_refs %>%
          total_cards_per_game = total_cards/total_games_reffed)
 view(strict_refs_min10)
 
-# Create a subset of df for plots
+# Create another dataframe that subsets per game statistics
 strict_refs_plotting <- strict_refs_min10 %>% 
   select(c(Referee,home_yellows_per_game:total_cards_per_game))
 
@@ -91,8 +86,8 @@ ref_yellow_plot <- strict_refs_long %>%
   ggplot(aes(x = reorder(Referee, +count), y = count, fill = card_metric)) + 
   geom_bar(stat = "identity", position = "dodge", width = 0.7) +
   geom_text(aes(label = format(count, digits = 2)), 
-            position = position_dodge(width = 0.7), hjust = 1, 
-            size = 3, color = "black") +
+            position = position_dodge(width = 0.7), hjust = 1.2, 
+            size = 3.5, color = "black", fontface = "bold") +
   coord_flip() +
   labs(title = "Average number of yellow cards that each Premier League referees showed to home and away teams",
        subtitle = "2021/2022 English Premier League Season",
@@ -100,19 +95,19 @@ ref_yellow_plot <- strict_refs_long %>%
        y = "Number of yellow cards given per game", 
        caption = "Minimum number of games refereed =  10 games") +
   #  geom_hline(yintercept = mean(strict_refs_plotting$home_yellows_per_game),) +
-  theme(plot.title = element_text(size = 12, hjust = 0.5, face = "bold"),
-        plot.subtitle = element_text(size = 11, face = "italic", hjust = 0.5),
-        plot.caption = element_text(hjust = 0.5, size = 9),
+  theme(plot.title = element_text(size = 16, hjust = 0.5, face = "bold"),
+        plot.subtitle = element_text(size = 13, face = "italic", hjust = 0.5),
+        plot.caption = element_text(hjust = 0.5, size = 10),
         panel.background = element_rect(fill = NA),
         #panel.grid.major = element_blank(),
-        axis.title.x = element_text(color = "grey20",face = "bold", size = 11),
-        axis.title.y = element_text(face = "bold", size = 11),
-        axis.text.y = element_text(color = "grey20", face = "bold", size = 9),
-        axis.text.x = element_text(face = "bold", size = 8),
+        axis.title.x = element_text(color = "grey20",face = "bold", size = 13),
+        axis.title.y = element_text(face = "bold", size = 13),
+        axis.text.y = element_text(color = "grey20", face = "bold", size = 12),
+        axis.text.x = element_text(face = "bold", size = 10),
         legend.position = "bottom") + 
   labs(fill = "") +
   scale_y_continuous(limits = c(0,2.5)) +
-  scale_fill_manual(labels = c("Away team", "Home Team"),values = c("#FFD700", "#FF8C00"))
+  scale_fill_manual(labels = c("Away team", "Home Team"), values = c("#FFD700", "#FF8C00"))
 
 ref_yellow_plot
 
