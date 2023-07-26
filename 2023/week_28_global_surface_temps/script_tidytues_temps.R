@@ -1,6 +1,7 @@
 library(tidyverse)
 library(paletteer)
 library(skimr)
+library(colorspace)
 
 # load data
 tuesdata <- tidytuesdayR::tt_load(2023, week = 28)
@@ -19,16 +20,58 @@ skim(global_temps)
 
 # convert global temp df to long format
 global_temps_long <- global_temps %>% 
-  pivot_longer(., cols = !Year, names_to = "month", values_to = "temp_deviation")
+  pivot_longer(., cols = !Year, names_to = "month", values_to = "temp_deviation") %>% 
+  mutate(., "hemisphere" = "global")
+
+# convert northern hemisphere temp df to long format
+nh_temps_long <- nh_temps %>% 
+  pivot_longer(., cols = !Year, names_to = "month", values_to = "temp_deviation") %>% 
+  mutate(., "hemisphere" = "north")
+
+# convert southern hemisphere temp df to long format
+sh_temps_long <- sh_temps %>% 
+  pivot_longer(., cols = !Year, names_to = "month", values_to = "temp_deviation") %>% 
+  mutate(., "hemisphere" = "south")
+
+
+# combine dataframes vertically, using rbind
+
+
+
+
+all_temps <- bind_rows(global_temps_long, nh_temps_long, sh_temps_long)
+
+
 
 # Plot global temp deviation over time, by month 
-global_temps_monthly <- global_temps_long %>% 
+all_temps_monthly <- all_temps %>% 
   filter(., month %in% c("Jan", "Feb", "Mar" ,"Apr", "May", "Jun" ,"Jul", "Aug" ,"Sep" ,"Oct", "Nov", "Dec")) %>% 
-  ggplot(., aes(x = Year, y = temp_deviation)) +
-  geom_point() +
-  geom_smooth()
+  ggplot(., aes(x = Year, y = temp_deviation, color = hemisphere)) +
+  geom_jitter(alpha = 0.3, width = 0.2, height = 0.2) +
+  geom_smooth() +
+  scale_color_discrete_diverging(palette = "Blue-Red")
+all_temps_monthly
 
-global_temps_monthly  
+
+# It is a little hard to see the points, let's switch to temp deviations by year (instead of month)
+
+hem_colors <- c("global" = "#004586FF", "north" = "#FF420EFF", "south" = "#579D1CFF")
+
+all_temps_annual <- all_temps %>% 
+  filter(., month== "J-D") %>% 
+  ggplot(aes(x = Year, y = temp_deviation, color = hemisphere)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(se = FALSE) +
+  scale_x_continuous(breaks = seq(1880, 2023,20), 
+                     expand = c(0,0)) + 
+  scale_y_continuous(limits = c(min(all_temps$temp_deviation), max(all_temps$temp_deviation)), 
+                     expand = c(0,0)) +
+  scale_color_manual(values = hem_colors)+
+  labs(title = "Comparing Global Surface Temperature Changes in the Northern and Southern Hemispheres",
+       subtitle = "Shown as deviation from the corresponding 1951-1980 averages",
+       x = "Year",
+       y = "Deviation", 
+       caption = "Source: NASA Goddard Institute for Space Studies || Graphic: Jeremy Osir ")
   
 
-
+all_temps_annual
