@@ -74,8 +74,8 @@ all_temps_annual <- all_temps %>%
        caption = "Source: NASA Goddard Institute for Space Studies || Graphic: Jeremy Osir ") +
   theme_light()+
   theme(panel.grid.major = element_blank(),
-        plot.title = element_text(size = 14, face = "bold"),
-        plot.subtitle = element_text(size = 12, face = "italic"),
+        plot.title = element_text(size = 12, face = "bold"),
+        plot.subtitle = element_text(size = 10, face = "italic"),
         plot.caption = element_text(size = 11, face = "italic"),
         axis.title.x = element_text(size = 11),
         axis.title.y = element_text(size = 11),
@@ -83,8 +83,8 @@ all_temps_annual <- all_temps %>%
         axis.text.y = element_text(size = 10),
         legend.title = element_text(size = 10, face = "bold"),
         legend.text = element_text(size = 10),
-        legend.position = c(0.1, 0.9))
+        legend.position = c(0.1, 0.8))
   
 all_temps_annual
 
-ggsave("fig_output/global_temps_trend.png", all_temps_annual, width = 10, height = 8)
+ggsave("fig_output/global_temps_trend.png", all_temps_annual, width = 8, height = 6)
