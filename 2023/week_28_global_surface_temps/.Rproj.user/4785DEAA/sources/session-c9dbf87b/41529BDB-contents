@@ -64,7 +64,7 @@ all_temps_annual <- all_temps %>%
   geom_smooth(se = FALSE) +
   scale_x_continuous(breaks = seq(1880, 2023,10), 
                      expand = c(0.01,0)) + 
-  scale_y_continuous(limits = c(-0.8, 1.5), 
+  scale_y_continuous(limits = c(-0.7, 1.5), 
                      expand = c(0,0)) +
   scale_color_manual(values = hem_colors)+
   labs(title = "Comparing Global Surface Temperature Changes in the Northern and Southern Hemispheres",
@@ -74,17 +74,17 @@ all_temps_annual <- all_temps %>%
        caption = "Source: NASA Goddard Institute for Space Studies || Graphic: Jeremy Osir ") +
   theme_light()+
   theme(panel.grid.major = element_blank(),
-        plot.title = element_text(size = 22, face = "bold"),
-        plot.subtitle = element_text(size = 18, face = "italic"),
-        plot.caption = element_text(size = 14, face = "italic"),
-        axis.title.x = element_text(size = 17),
-        axis.title.y = element_text(size = 17),
-        axis.text.x = element_text(size = 14),
-        axis.text.y = element_text(size = 14),
-        legend.title = element_text(size = 14),
-        legend.text = element_text(size = 15),
+        plot.title = element_text(size = 14, face = "bold"),
+        plot.subtitle = element_text(size = 12, face = "italic"),
+        plot.caption = element_text(size = 11, face = "italic"),
+        axis.title.x = element_text(size = 11),
+        axis.title.y = element_text(size = 11),
+        axis.text.x = element_text(size = 10),
+        axis.text.y = element_text(size = 10),
+        legend.title = element_text(size = 10, face = "bold"),
+        legend.text = element_text(size = 10),
         legend.position = c(0.1, 0.9))
   
 all_temps_annual
 
-ggsave("fig_output/global_temps_trend.png", all_temps_annual, width = 12, height = 9)
+ggsave("fig_output/global_temps_trend.png", all_temps_annual, width = 10, height = 8)

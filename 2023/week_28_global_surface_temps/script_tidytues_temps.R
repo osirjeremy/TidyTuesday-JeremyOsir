@@ -62,16 +62,29 @@ all_temps_annual <- all_temps %>%
   ggplot(aes(x = Year, y = temp_deviation, color = hemisphere)) +
   geom_point(alpha = 0.6) +
   geom_smooth(se = FALSE) +
-  scale_x_continuous(breaks = seq(1880, 2023,20), 
-                     expand = c(0,0)) + 
-  scale_y_continuous(limits = c(min(all_temps$temp_deviation), max(all_temps$temp_deviation)), 
+  scale_x_continuous(breaks = seq(1880, 2023,10), 
+                     expand = c(0.01,0)) + 
+  scale_y_continuous(limits = c(-0.7, 1.5), 
                      expand = c(0,0)) +
   scale_color_manual(values = hem_colors)+
   labs(title = "Comparing Global Surface Temperature Changes in the Northern and Southern Hemispheres",
-       subtitle = "Shown as deviation from the corresponding 1951-1980 averages",
+       subtitle = "Shown as deviation in degrees celsius from the 1951-1980 average",
        x = "Year",
-       y = "Deviation", 
-       caption = "Source: NASA Goddard Institute for Space Studies || Graphic: Jeremy Osir ")
+       y = "Deviation from 1951-1980 average (°C) ", 
+       caption = "Source: NASA Goddard Institute for Space Studies || Graphic: Jeremy Osir ") +
+  theme_light()+
+  theme(panel.grid.major = element_blank(),
+        plot.title = element_text(size = 14, face = "bold"),
+        plot.subtitle = element_text(size = 12, face = "italic"),
+        plot.caption = element_text(size = 11, face = "italic"),
+        axis.title.x = element_text(size = 11),
+        axis.title.y = element_text(size = 11),
+        axis.text.x = element_text(size = 10),
+        axis.text.y = element_text(size = 10),
+        legend.title = element_text(size = 10, face = "bold"),
+        legend.text = element_text(size = 10),
+        legend.position = c(0.1, 0.9))
   
-
 all_temps_annual
+
+ggsave("fig_output/global_temps_trend.png", all_temps_annual, width = 10, height = 8)

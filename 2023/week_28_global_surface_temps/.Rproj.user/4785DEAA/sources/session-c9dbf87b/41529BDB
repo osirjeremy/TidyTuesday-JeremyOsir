@@ -3,9 +3,9 @@
     "path": "~/Desktop/D_Sci/tidyTuesdays/2023/week_28_global_surface_temps/script_tidytues_temps.R",
     "project_path": "script_tidytues_temps.R",
     "type": "r_source",
-    "hash": "0",
+    "hash": "1737151778",
     "contents": "",
-    "dirty": true,
+    "dirty": false,
     "created": 1689965230199.0,
     "source_on_save": false,
     "relative_order": 1,
@@ -17,11 +17,11 @@
         "scrollLine": "56"
     },
     "folds": "",
-    "lastKnownWriteTime": 1690400164,
+    "lastKnownWriteTime": 1690483640,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1690483263068,
+    "last_content_update": 1690483640927,
     "read_only": false,
     "read_only_alternatives": []
 }
