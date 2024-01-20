@@ -3,7 +3,6 @@ library(here)
 library(janitor)
 library(readr)
 library(ggplot2)
-library(ggthemr)
 library(gridExtra)
 library(scales)
 
@@ -137,7 +136,7 @@ nhl_birth_plot <- ggplot(combined_births, aes(x = month, y = percentage, fill = 
         legend.text = element_text(size = 10, face = "bold")) + # Add margin to y-axis title
   scale_fill_manual(name = "Legend", 
                     values = c("Canada" = "blue", "NHL" = "orange"),
-                    labels = c("% of Canadians born in each month", "% of NHL Players born in each month"))
+                    labels = c("% of Canadians born in each month", "% of Canadian NHL Players born in each month"))
 nhl_birth_plot
 
 # Save the plot as an image (adjust width and height as needed)
