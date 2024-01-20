@@ -79,38 +79,39 @@ strict_refs_min10 %>%
   # first reshape df from wide to long
 strict_refs_long <- strict_refs_plotting %>%
   select(c(Referee, home_yellows_per_game, away_yellows_per_game)) %>% 
-  pivot_longer(!Referee, names_to = "card_metric", values_to = "count") 
-
+  pivot_longer(!Referee, names_to = "card_metric", values_to = "count") %>% 
+  # arrange(Referee) %>%  # Ensure data is sorted by referee
+  # group_by(Referee) %>%  # Group by referee
+  # mutate(CumulativeTotal = cumsum(count)) %>%  # Calculate cumulative total
+  # ungroup()  # Remove grouping
 
 ref_yellow_plot <- strict_refs_long %>%
-  ggplot(aes(x = reorder(Referee, +count), y = count, fill = card_metric)) + 
-  geom_bar(stat = "identity", position = "dodge", width = 0.7) +
-  geom_text(aes(label = format(count, digits = 2)), 
-            position = position_dodge(width = 0.7), hjust = 1.2, 
-            size = 3.5, color = "black", fontface = "bold") +
-  coord_flip() +
-  labs(title = "Average number of yellow cards that each Premier League referees showed to home and away teams",
+  ggplot(aes(x = reorder(Referee, +count), y = count, fill = card_metric)) +
+  geom_bar(stat = "identity", position = "stack", width = 0.7, color = "white") +
+  geom_text(aes(label = ifelse(count == round(count), format(count, digits = 1), format(count, digits = 2))), 
+            position = position_stack(vjust = 0.5), size = 3.5, color = "black", fontface = "bold") +
+  labs(title = "Average Number of Yellow Cards Awarded by Each Premier League Referee",
        subtitle = "2021/2022 English Premier League Season",
+       caption = "Minimum Number of Games Refereed: 10 games",
        x = "Referee",
-       y = "Number of yellow cards given per game", 
-       caption = "Minimum number of games refereed =  10 games") +
-  #  geom_hline(yintercept = mean(strict_refs_plotting$home_yellows_per_game),) +
-  theme(plot.title = element_text(size = 16, hjust = 0.5, face = "bold"),
-        plot.subtitle = element_text(size = 13, face = "italic", hjust = 0.5),
+       y = "Average Number of Yellow Cards per Game") +
+  theme_minimal() +
+  theme(plot.title = element_text(size = 14, hjust = 0.5, face = "bold"),
+        plot.subtitle = element_text(size = 14, face = "italic", hjust = 0.5),
+        plot.caption.position = "panel",  # Corrected argument
         plot.caption = element_text(hjust = 0.5, size = 10),
-        panel.background = element_rect(fill = NA),
-        #panel.grid.major = element_blank(),
-        axis.title.x = element_text(color = "grey20",face = "bold", size = 13),
-        axis.title.y = element_text(face = "bold", size = 13),
-        axis.text.y = element_text(color = "grey20", face = "bold", size = 12),
-        axis.text.x = element_text(face = "bold", size = 10),
+        panel.grid.major = element_blank(),
+        axis.title.x = element_text(color = "grey20", face = "bold", size = 11),
+        axis.title.y = element_text(face = "bold", size = 11),
+        axis.text.y = element_blank(),  
+        axis.text.x = element_text(face = "bold", size = 9, angle = 45, hjust = 1, vjust = 1.3, margin = margin(b = -5)),  # Rotate x-axis labels
         legend.position = "bottom") + 
   labs(fill = "") +
-  scale_y_continuous(limits = c(0,2.5)) +
-  scale_fill_manual(labels = c("Away team", "Home Team"), values = c("#FFD700", "#FF8C00"))
+  scale_y_continuous(limits = c(0, 5)) +  
+  scale_fill_manual(labels = c("Away Team", "Home Team"), values = c("#FFD700", "#FF8C00"))
 
 ref_yellow_plot
 
 
-ggsave("fig_output/yellows_home_away.png", ref_yellow_plot, width = 15, height = 10)
+ggsave("fig_output/yellows_home_away.png", ref_yellow_plot, width = 10, height = 6, units = "in", dpi = 300)
 
