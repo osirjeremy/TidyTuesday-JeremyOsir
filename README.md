@@ -24,7 +24,8 @@ Below are my Tidy Tuesday plots that I coded in R:
 
 [Week 14: English Premier League Data, 2021-2022 Season](2023/week_14_EPL)
 
-![yellows_home_away](https://github.com/osirjeremy/TidyTuesday-JeremyOsir/assets/8055445/cb2d7e21-f5d5-4f4d-ba64-058d1351b6d6)
+![yellows_home_away](https://github.com/osirjeremy/TidyTuesday-JeremyOsir/assets/8055445/ab204757-ebdb-4ece-8509-a0d3c25a7347)
+
 
 
 [Week 24: SAFI Irrigation Surveys
