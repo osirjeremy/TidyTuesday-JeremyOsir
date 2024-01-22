@@ -6,12 +6,6 @@ library(ggplot2)
 library(gridExtra)
 library(scales)
 
-
-# Set the working directory
-# setwd("/Users/jeremyosir/Desktop/D_Sci/tidyTuesdays/2024/2024-01-09_hockey_birth_months")
-working_dir <- here::here("2024", "2024-01-09_NHL_birth_months", "data")
-
-
 # Import data directly from GitHub
 
 canada_births_1991_2022 <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2024/2024-01-09/canada_births_1991_2022.csv')
