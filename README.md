@@ -24,7 +24,10 @@ Below are my Tidy Tuesday plots that I coded in R:
 
 [Week 14: English Premier League Data, 2021-2022 Season](2023/week_14_EPL)
 
-![yellows_home_away](https://github.com/osirjeremy/TidyTuesday-JeremyOsir/assets/8055445/ab204757-ebdb-4ece-8509-a0d3c25a7347)
+![yellows_home_away](https://github.com/osirjeremy/TidyTuesday-JeremyOsir/assets/8055445/6209e421-33c8-46e7-b2c7-a629a6826909)
+
+
+
 
 
 
