@@ -113,5 +113,6 @@ ref_yellow_plot <- strict_refs_long %>%
 ref_yellow_plot
 
 
-ggsave("fig_output/yellows_home_away.png", ref_yellow_plot, width = 10, height = 6, units = "in", dpi = 300)
+# ggsave("fig_output/yellows_home_away.png", ref_yellow_plot, width = 10, height = 6, units = "in", dpi = 300)
+ggsave("fig_output/yellows_home_away.png", ref_yellow_plot, width = 15, height = 6, units = "in", dpi = 300, bg = "white")
 
