@@ -1,6 +1,7 @@
 #Load libraries for EDA and data viz
 library(skimr)
 library(tidyverse) # loads ggplot2, tidyr, dplyr, and several other EDA packages
+library(tibble)
 
 #set working directory - this is where the project files will be saved
 setwd("./Desktop/D_Sci/tidyTuesdays/2024/2024-05-21 _CarbonEmissions")
@@ -79,7 +80,7 @@ ggplot(emissions_by_entity_type,
        x = "Year", y = "Total Emissions (MtC02e)")
 
 
-# Faceted area chart
+# Faceted area chart - emmissions by different entities over time
 ggplot(emissions_by_entity_type, 
        aes(x = year, y = total_emissions_entity, fill = parent_type)) +
   geom_area(alpha = 0.4) +
@@ -88,3 +89,38 @@ ggplot(emissions_by_entity_type,
        x = "Year", y = "Total Emissions (MtC02e)") +
   facet_wrap(~ parent_type, scales = "fixed")
 
+# Some questions - over time, which are the top 5 entities responsible for emissions for each entity category
+
+emitters_top10 <- emissions %>% 
+  group_by(parent_entity) %>% 
+  summarise(total_emissions_alltime = sum(total_emissions_MtCO2e)) %>% 
+  arrange(desc(total_emissions_alltime)) %>% 
+  slice_head(n=10) %>% 
+  rename(`Parent Entity` = parent_entity,
+         `Total Emissions (MtCO2e)` = total_emissions_alltime)
+#   mutate(`Total Emissions (MtCO2e)` = scales::comma(`Total Emissions (MtCO2e)`))
+# 
+# emitters_top5
+
+# Create a barplot
+ggplot(emitters_top10, aes(x = reorder(`Parent Entity`, -`Total Emissions (MtCO2e)`), 
+                          y = `Total Emissions (MtCO2e)`)) +
+  geom_bar(stat = "identity", fill = "#4B8BBE", color = "black") +
+  geom_text(aes(label = scales::comma(`Total Emissions (MtCO2e)`)), 
+            vjust = -0.3, size = 3.8, color = "black") +
+  labs(title = "Top 10 CO2 Emitters, 1854 - 2022",
+       x = "Parent Entity",
+       y = "Total Emissions (MtCO2e)") +
+  scale_y_continuous(labels = scales::comma) +  # Format y-axis labels
+  theme_minimal(base_family = "Helvetica") +
+  theme(
+    plot.title = element_text(size = 18, face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(size = 14, hjust = 0.5),
+    axis.title.x = element_text(size = 12, face = "bold", margin = margin(t = 10)),
+    axis.title.y = element_text(size = 12, face = "bold",margin = margin(r = 10)),
+    axis.text.x = element_text(size = 10, angle = 45, hjust = 1, vjust =1.2, face = "bold"),
+    panel.grid.major = element_line(linewidth = 0.1, linetype = 'solid', colour = "gray"),
+    panel.grid.minor = element_blank(),
+    plot.background = element_rect(fill = "white", color = NA),
+    panel.background = element_rect(fill = "white", color = NA)
+  )
