@@ -4,7 +4,8 @@ Below are my Tidy Tuesday plots that I coded in R:
 
 [2024  - Week 21: Top Carbon Emitters, 1854 - 2022](https://github.com/osirjeremy/TidyTuesday-JeremyOsir/tree/de19e164f55df5ab21414ca91a2c7ebdc458a5fb/2024/2024-05-21%20_CarbonEmissions)
 
-![top10_emitters](https://github.com/osirjeremy/TidyTuesday-JeremyOsir/assets/8055445/11407669-4f98-46ec-a273-96f1a6dc54a1)
+![top10_emitters](https://github.com/osirjeremy/TidyTuesday-JeremyOsir/assets/8055445/1990ffd1-894e-4630-b6a6-36056f23f553)
+
 
 
 [2024  - Week 2: You want to be an NHL player? Well, you better be born in the first quarter of the year!
