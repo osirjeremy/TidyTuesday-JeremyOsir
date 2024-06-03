@@ -97,17 +97,19 @@ emitters_top10 <- emissions %>%
   arrange(desc(total_emissions_alltime)) %>% 
   slice_head(n=10) %>% 
   rename(`Parent Entity` = parent_entity,
-         `Total Emissions (MtCO2e)` = total_emissions_alltime)
+         `Total Emissions (MtCO2e)` = total_emissions_alltime) %>% 
+  mutate(fill_color = ifelse(`Total Emissions (MtCO2e)` == max(`Total Emissions (MtCO2e)`), "red", "steelblue"))
 #   mutate(`Total Emissions (MtCO2e)` = scales::comma(`Total Emissions (MtCO2e)`))
 # 
 # emitters_top5
 
 # Create a barplot
-top10_emitters <- ggplot(emitters_top10, aes(x = reorder(`Parent Entity`, -`Total Emissions (MtCO2e)`), 
-                          y = `Total Emissions (MtCO2e)`)) +
-  geom_bar(stat = "identity", fill = "#4B8BBE", color = "black") +
+top10_emitters <- ggplot(emitters_top10, aes(x = reorder(`Parent Entity`, `Total Emissions (MtCO2e)`), 
+                          y = `Total Emissions (MtCO2e)`, fill = fill_color)) +
+  geom_bar(stat = "identity") +
+  scale_fill_identity()+
   geom_text(aes(label = scales::comma(`Total Emissions (MtCO2e)`)), 
-            vjust = -0.3, size = 3.8, color = "black") +
+            vjust = -0.1, hjust = 1.03, size = 3.8, color = "white", fontface = "bold") +
   labs(title = "Top 10 Carbon Dioxide Emitters, 1854 - 2022",
        subtitle = "Units - million tonnes of carbon dioxide equivalent (MtCO2e)",
        caption = "Source: Carbon Majors Emissions Database",
@@ -116,18 +118,22 @@ top10_emitters <- ggplot(emitters_top10, aes(x = reorder(`Parent Entity`, -`Tota
   scale_y_continuous(labels = scales::comma) +  # Format y-axis labels
   theme_minimal(base_family = "Helvetica") +
   theme(
-    plot.title = element_text(size = 18, face = "bold", hjust = 0.5),
-    plot.subtitle = element_text(size = 10, hjust = 0.5),
-    plot.caption.position = "panel",
-    plot.caption = element_text(hjust = 0.5, size = 10),
-    axis.title.x = element_text(size = 12, face = "bold", margin = margin(t = 5)),
-    axis.title.y = element_text(size = 12, face = "bold",margin = margin(r = 10)),
-    axis.text.x = element_text(size = 10, angle = 45, hjust = 1, vjust =1.2, face = "bold"),
-    panel.grid.major = element_line(linewidth = 0.1, linetype = 'solid', colour = "gray"),
+    plot.title = element_text(size = 22, face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(size = 16, hjust = 0.5),
+    axis.title.x = element_text(size = 14, margin = margin(t = 10)),
+    axis.title.y = element_text(size = 14, margin = margin(r = 10)),
+    axis.text.x = element_text(size = 12, face = "bold", angle = 0, hjust = 0.5),
+    axis.text.y = element_text(size = 12, face = "bold", margin = margin(r=-25)),
+    panel.grid.major = element_line(size = 0.1, linetype = 'solid', colour = "gray"),
     panel.grid.minor = element_blank(),
     plot.background = element_rect(fill = "white", color = NA),
-    panel.background = element_rect(fill = "white", color = NA)
-  )
+    panel.background = element_rect(fill = "white", color = NA),
+    plot.caption.position = "panel",  # Position caption within the panel
+    legend.position = "none"  # Remove the legend
+  ) +
+  coord_flip()
+
+top10_emitters
 
 # create a folder in working directory to save the plots
 dir.create("plots")
@@ -138,3 +144,36 @@ ggsave("plots/top10_emitters.png", plot = top10_emitters, width = 10, height = 7
 
 # Print the path where the plot is saved
 print("Plot saved to: plots/top10_emitters_barplot.png")
+
+
+
+# Create the barplot
+barplot <- ggplot(emitters_top10, aes(x = reorder(`Parent Entity`, `Total Emissions (MtCO2e)`), 
+                                     y = `Total Emissions (MtCO2e)`, fill = fill_color)) +
+  geom_bar(stat = "identity") +
+  geom_text(aes(label = scales::comma(`Total Emissions (MtCO2e)`)), 
+            hjust = -0.1, size = 4.5, color = "black") +
+  scale_fill_identity() +  # Use the fill_color column for bar colors
+  labs(title = "Top 10 Carbon Dioxide Emitters, 1854 - 2022",
+       subtitle = "Units - million tonnes of carbon dioxide equivalent (MtCO2e)",
+       x = "Parent Entity",
+       y = "Total Emissions (MtCO2e)",
+       caption = "Source: Carbon Majors Emissions Database") +
+  scale_y_continuous(labels = scales::comma) +  # Format y-axis labels
+  theme_minimal(base_family = "Helvetica") +
+  theme(
+    plot.title = element_text(size = 22, face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(size = 16, hjust = 0.5),
+    axis.title.x = element_text(size = 14, margin = margin(t = 10)),
+    axis.title.y = element_text(size = 14, margin = margin(r = 10)),
+    axis.text.x = element_text(size = 12, angle = 0, hjust = 0.5),
+    axis.text.y = element_text(size = 12),
+    panel.grid.major = element_line(size = 0.1, linetype = 'solid', colour = "gray"),
+    panel.grid.minor = element_blank(),
+    plot.background = element_rect(fill = "white", color = NA),
+    panel.background = element_rect(fill = "white", color = NA),
+    plot.caption.position = "panel",  # Position caption within the panel
+    legend.position = "none"  # Remove the legend
+  ) +
+  coord_flip() 
+barplot
