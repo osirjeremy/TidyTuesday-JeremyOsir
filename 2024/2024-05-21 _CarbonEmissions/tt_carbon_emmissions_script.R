@@ -103,20 +103,24 @@ emitters_top10 <- emissions %>%
 # emitters_top5
 
 # Create a barplot
-ggplot(emitters_top10, aes(x = reorder(`Parent Entity`, -`Total Emissions (MtCO2e)`), 
+top10_emitters <- ggplot(emitters_top10, aes(x = reorder(`Parent Entity`, -`Total Emissions (MtCO2e)`), 
                           y = `Total Emissions (MtCO2e)`)) +
   geom_bar(stat = "identity", fill = "#4B8BBE", color = "black") +
   geom_text(aes(label = scales::comma(`Total Emissions (MtCO2e)`)), 
             vjust = -0.3, size = 3.8, color = "black") +
-  labs(title = "Top 10 CO2 Emitters, 1854 - 2022",
+  labs(title = "Top 10 Carbon Dioxide Emitters, 1854 - 2022",
+       subtitle = "Units - million tonnes of carbon dioxide equivalent (MtCO2e)",
+       caption = "Source: Carbon Majors Emissions Database",
        x = "Parent Entity",
        y = "Total Emissions (MtCO2e)") +
   scale_y_continuous(labels = scales::comma) +  # Format y-axis labels
   theme_minimal(base_family = "Helvetica") +
   theme(
     plot.title = element_text(size = 18, face = "bold", hjust = 0.5),
-    plot.subtitle = element_text(size = 14, hjust = 0.5),
-    axis.title.x = element_text(size = 12, face = "bold", margin = margin(t = 10)),
+    plot.subtitle = element_text(size = 10, hjust = 0.5),
+    plot.caption.position = "panel",
+    plot.caption = element_text(hjust = 0.5, size = 10),
+    axis.title.x = element_text(size = 12, face = "bold", margin = margin(t = 5)),
     axis.title.y = element_text(size = 12, face = "bold",margin = margin(r = 10)),
     axis.text.x = element_text(size = 10, angle = 45, hjust = 1, vjust =1.2, face = "bold"),
     panel.grid.major = element_line(linewidth = 0.1, linetype = 'solid', colour = "gray"),
@@ -124,3 +128,13 @@ ggplot(emitters_top10, aes(x = reorder(`Parent Entity`, -`Total Emissions (MtCO2
     plot.background = element_rect(fill = "white", color = NA),
     panel.background = element_rect(fill = "white", color = NA)
   )
+
+# create a folder in working directory to save the plots
+dir.create("plots")
+
+# save plots in folder for Git Repo
+
+ggsave("plots/top10_emitters.png", plot = top10_emitters, width = 10, height = 7, units = "in", dpi = 300, bg = "white")
+
+# Print the path where the plot is saved
+print("Plot saved to: plots/top10_emitters_barplot.png")
